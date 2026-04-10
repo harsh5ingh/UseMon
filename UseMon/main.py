@@ -2,7 +2,24 @@ import win32gui
 import win32process
 import psutil
 import time
+import threading
+from flask import Flask, jsonify
+from flask_cors import CORS
 
+# -----------------------------
+# Flask setup
+# -----------------------------
+app = Flask(__name__)
+CORS(app)
+
+# -----------------------------
+# Global data (shared)
+# -----------------------------
+app_usage = {}
+
+# -----------------------------
+# Time formatter
+# -----------------------------
 def format_time(seconds):
     minutes = int(seconds // 60)
     remaining_seconds = int(seconds % 60)
@@ -11,32 +28,61 @@ def format_time(seconds):
         return f"{remaining_seconds} sec"
     return f"{minutes} min {remaining_seconds} sec"
 
+# -----------------------------
+# Get active window
+# -----------------------------
 def get_active_window():
     window = win32gui.GetForegroundWindow()
     _, pid = win32process.GetWindowThreadProcessId(window)
-    
+
     try:
         process = psutil.Process(pid)
         return process.name()
     except:
         return "Unknown"
 
-current_app = get_active_window()
-start_time = time.time()
+# -----------------------------
+# Tracking function (background)
+# -----------------------------
+def track_usage():
+    global app_usage
 
-try:
- while True:
-    time.sleep(1)
-    new_app = get_active_window()
+    current_app = get_active_window()
+    start_time = time.time()
 
-    if new_app != current_app:
-        end_time = time.time()
-        duration = end_time - start_time
+    while True:
+        time.sleep(1)
+        new_app = get_active_window()
 
-        print(f"{current_app} used for {format_time(duration)}")
+        if new_app != current_app:
+            end_time = time.time()
+            duration = end_time - start_time
 
-        current_app = new_app
-        start_time = time.time()
+            # store data
+            app_usage[current_app] = app_usage.get(current_app, 0) + duration
 
-except KeyboardInterrupt:
-  print("\nTracking Stopped")
+            print(f"{current_app} used for {format_time(duration)}")
+
+            current_app = new_app
+            start_time = time.time()
+
+# -----------------------------
+# Flask routes
+# -----------------------------
+@app.route("/")
+def home():
+    return "UseMon API running 🚀"
+
+@app.route("/data")
+def data():
+    return jsonify(app_usage)
+
+# -----------------------------
+# Start everything
+# -----------------------------
+if __name__ == "__main__":
+    # run tracking in background
+    threading.Thread(target=track_usage, daemon=True).start()
+
+    # run flask
+    app.run(debug=False)
