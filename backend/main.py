@@ -1,16 +1,39 @@
 import win32gui
+import win32api
+import win32ui
 import win32process
 import psutil
 import time
 import threading
 from flask import Flask, jsonify
 from flask_cors import CORS
+import sqlite3
 
 # -----------------------------
 # Flask setup
 # -----------------------------
 app = Flask(__name__)
 CORS(app)
+
+#-------------------------------
+# Database setup
+#-------------------------------
+
+conn = sqlite3.connect("usemon.db",
+check_same_thread = False)
+cursor = conn.cursor()
+
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS usage (
+               id INTEGER  PRIMARY KEY AUTOINCREMENT,
+               app_name TEXT,
+               duration REAL,
+               timestamp DATETIME DEFAULT
+CURRENT_TIMESTAMP
+)
+""")
+
+conn.commit()
 
 # -----------------------------
 # Global data (shared)
@@ -27,6 +50,13 @@ def format_time(seconds):
     if minutes == 0:
         return f"{remaining_seconds} sec"
     return f"{minutes} min {remaining_seconds} sec"
+
+def save_usage(app_name, duration):
+    cursor.execute(
+        "INSERT INTO usage (app_name, duration) VALUES(?, ?)",
+        (app_name, duration)
+    )
+    conn.commit()
 
 # -----------------------------
 # Get active window
@@ -60,6 +90,7 @@ def track_usage():
 
             # store data
             app_usage[current_app] = app_usage.get(current_app, 0) + duration
+            save_usage(current_app, duration)
 
             print(f"{current_app} used for {format_time(duration)}")
 
@@ -76,6 +107,44 @@ def home():
 @app.route("/data")
 def data():
     return jsonify(app_usage)
+
+@app.route("/stats")
+def stats():
+
+    cursor.execute("""
+    SELECT app_name,
+      ROUND(SUM(duration),2)
+    FROM usage
+    GROUP BY app_name
+    ORDER BY SUM(duration) DESC
+""")
+    
+    rows = cursor.fetchall()
+
+    result = []
+
+    for row in rows:
+        result.append({
+            "app":row[0],
+            "seconds":row[1]
+        })
+
+    return jsonify(result)
+
+@app.route("/screen-time")
+def scree_time():
+
+    cursor.execute("""
+        SELECT SUM(duration)
+        FROM usage
+""")
+    
+    total = cursor.fetchone()[0] or 0
+
+    return jsonify({
+        "seconds": round(total, 2)
+    })
+
 
 # -----------------------------
 # Start everything

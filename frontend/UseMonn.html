@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Digital Wellbeing — Windows</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+</head>
+<body>
+<div class="app">
+
+<!-- Sidebar -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon">
+      <svg viewBox="0 0 24 24"><path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.35C17.25 22.15 21 17.25 21 12V7L12 2z"/></svg>
+    </div>
+    <div class="logo-text">Digital Wellbeing<span>Windows 11</span></div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-section-label">Overview</div>
+    <button class="nav-item active" onclick="setNav(this)">
+      <svg viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      Dashboard
+    </button>
+    <button class="nav-item" onclick="setNav(this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      Trends
+    </button>
+    <button class="nav-item" onclick="setNav(this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      Focus
+    </button>
+  </div>
+
+  <div class="nav-section" style="margin-top:8px">
+    <div class="nav-section-label">Manage</div>
+    <button class="nav-item" onclick="setNav(this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+      App limits
+      <span class="nav-dot"></span>
+    </button>
+    <button class="nav-item" onclick="setNav(this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      Notifications
+    </button>
+    <button class="nav-item" onclick="setNav(this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+      Family safety
+    </button>
+    <button class="nav-item" onclick="setNav(this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+      Settings
+    </button>
+  </div>
+
+  <div class="sidebar-footer">
+    <div class="theme-toggle">
+      <span>Dark mode</span>
+      <button class="toggle" id="themeToggle" onclick="toggleTheme()"></button>
+    </div>
+  </div>
+</nav>
+
+<!-- Main -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <h1>Dashboard</h1>
+      <p id="topbar-date">Loading...</p>
+    </div>
+    <div class="topbar-right">
+      <div class="day-tabs">
+        <button class="day-tab active" onclick="setDay(this,'Today')">Today</button>
+        <button class="day-tab" onclick="setDay(this,'Yesterday')">Yesterday</button>
+        <button class="day-tab" onclick="setDay(this,'Week')">Week</button>
+      </div>
+      <div class="avatar">YO</div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- Insight banner -->
+    <div class="insight" id="insightBanner">
+      <div class="insight-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2.26C6.19 13.47 5 11.38 5 9a7 7 0 0 1 7-7zM9 21v-1h6v1a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1z"/></svg>
+      </div>
+      <div class="insight-text">
+        <strong>Heads up:</strong> Your screen time is up 48 minutes compared to yesterday. Chrome usage has been high since 9 AM — consider a short break.
+      </div>
+      <button class="insight-close" onclick="document.getElementById('insightBanner').style.display='none'">×</button>
+    </div>
+
+    <!-- Metric cards -->
+    <div class="metrics">
+      <div class="metric-card">
+        <div class="metric-icon" style="background:var(--blue-light)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        </div>
+        <div class="metric-label">Screen time</div>
+        <div class="metric-value">6<sub>h 42m</sub></div>
+        <div class="metric-trend trend-up">▲ 48m vs yesterday</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-icon" style="background:var(--amber-light)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+        </div>
+        <div class="metric-label">Pickups</div>
+        <div class="metric-value">38</div>
+        <div class="metric-trend trend-down">▼ 5 vs yesterday</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-icon" style="background:var(--green-light)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <div class="metric-label">Focus time</div>
+        <div class="metric-value">1<sub>h 15m</sub></div>
+        <div class="metric-trend trend-neutral">— same as yesterday</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-icon" style="background:var(--red-light)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        </div>
+        <div class="metric-label">Notifications</div>
+        <div class="metric-value">124</div>
+        <div class="metric-trend trend-up">▲ 22 vs yesterday</div>
+      </div>
+    </div>
+
+    <!-- Row 2: app usage + category -->
+    <div class="row2">
+      <div class="card" style="animation-delay:.25s">
+        <div class="card-header">
+          <span class="card-title">App usage today</span>
+          <span class="card-meta">Total: 6h 42m</span>
+        </div>
+        <div id="app-bars"></div>
+      </div>
+      <div class="card" style="animation-delay:.3s">
+        <div class="card-header">
+          <span class="card-title">Time by category</span>
+        </div>
+        <div class="donut-wrap">
+          <canvas id="donut" width="110" height="110" style="flex-shrink:0" role="img" aria-label="Donut chart: Work 38%, Entertainment 27%, Social 18%, Browsing 12%, Other 5%">Work 38%, Entertainment 27%, Social 18%, Browsing 12%, Other 5%</canvas>
+          <div class="donut-legend" id="donut-legend"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hourly chart -->
+    <div class="card row-full" style="animation-delay:.3s">
+      <div class="card-header">
+        <span class="card-title">Hourly activity</span>
+        <span class="card-badge badge-blue">Live</span>
+      </div>
+      <div style="position:relative;height:130px">
+        <canvas id="hourly-chart" role="img" aria-label="Bar chart showing hourly screen activity from 7am to 10pm">Hourly screen time activity</canvas>
+      </div>
+    </div>
+
+    <!-- Row 3: focus timer, streak, limits -->
+    <div class="row3">
+      <div class="card" style="animation-delay:.35s;text-align:center">
+        <div class="card-header" style="justify-content:center"><span class="card-title">Focus session</span></div>
+        <svg class="timer-svg" width="110" height="110" viewBox="0 0 110 110">
+          <circle cx="55" cy="55" r="46" fill="none" stroke="var(--border)" stroke-width="7"/>
+          <circle id="timerRing" cx="55" cy="55" r="46" fill="none" stroke="var(--blue)" stroke-width="7"
+            stroke-dasharray="289" stroke-dashoffset="72"
+            stroke-linecap="round" transform="rotate(-90 55 55)" style="transition:stroke-dashoffset .5s"/>
+        </svg>
+        <div class="timer-big" id="timerDisplay">25:00</div>
+        <div class="timer-sub" id="timerSub">Pomodoro · 0 sessions</div>
+        <button class="btn btn-blue" id="timerBtn" onclick="toggleTimer()" style="margin-top:4px">Start focus</button>
+      </div>
+
+      <div class="card" style="animation-delay:.38s">
+        <div class="card-header"><span class="card-title">Mindful streak</span><span class="card-badge badge-green">12 days</span></div>
+        <div class="streak-day-labels">
+          <span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span>
+        </div>
+        <div class="streak-outer" id="streak-grid"></div>
+        <div style="display:flex;gap:8px;align-items:center;margin-top:12px;font-size:11px;color:var(--text3)">
+          <span style="width:10px;height:10px;border-radius:2px;background:var(--blue);display:inline-block"></span> Goal met
+          <span style="width:10px;height:10px;border-radius:2px;background:var(--surface2);border:1px solid var(--border);display:inline-block;margin-left:8px"></span> Missed
+        </div>
+      </div>
+
+      <div class="card" style="animation-delay:.41s">
+        <div class="card-header"><span class="card-title">App limits</span><span class="card-badge badge-red">1 exceeded</span></div>
+        <div id="app-limits"></div>
+      </div>
+    </div>
+
+    <!-- Row 2: notifications + schedule -->
+    <div class="row2">
+      <div class="card" style="animation-delay:.44s">
+        <div class="card-header">
+          <span class="card-title">Top notification sources</span>
+          <span class="card-meta">124 today</span>
+        </div>
+        <div id="notif-list"></div>
+      </div>
+      <div class="card" style="animation-delay:.47s">
+        <div class="card-header"><span class="card-title">Downtime schedules</span></div>
+        <div id="schedule-list"></div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+</div><!-- /app -->
+
+<script>
+  async function fetchData() {
+  try {
+    const res = await fetch("http://127.0.0.1:5000/data");
+    const data = await res.json();
+
+    console.log(data); // debug
+    updateUI(data);   // 🔥 THIS IS IMPORTANT
+
+  } catch (err) {
+    console.error("Error:", err);
+  }
+}
+setInterval(fetchData, 2000); // har 2 sec update
+fetchData(); // first load
+// Theme
+const html = document.documentElement;
+const toggle = document.getElementById('themeToggle');
+let dark = false;
+function toggleTheme() {
+  dark = !dark;
+  html.setAttribute('data-theme', dark ? 'dark' : '');
+  toggle.className = 'toggle' + (dark ? ' on' : '');
+  updateCharts();
+}
+
+// Date
+const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const now = new Date();
+document.getElementById('topbar-date').textContent =
+  days[now.getDay()] + ', ' + months[now.getMonth()] + ' ' + now.getDate() + ' ' + now.getFullYear();
+
+// Nav
+function setNav(el) {
+  document.querySelectorAll('.nav-item').forEach(e => e.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// Day tabs
+function setDay(el) {
+  document.querySelectorAll('.day-tab').forEach(e => e.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// App bars
+/*const apps = [
+  { name: 'Chrome',  emoji: '🌐', bg: '#EBF0FD', color: '#1a56db', mins: 148 },
+  { name: 'VS Code', emoji: '💻', bg: '#EAF5EE', color: '#1a7a4a', mins: 112 },
+  { name: 'Slack',   emoji: '💬', bg: '#FDF3E3', color: '#a35c00', mins: 74  },
+  { name: 'YouTube', emoji: '▶',  bg: '#FDECEA', color: '#c0392b', mins: 60  },
+  { name: 'Spotify', emoji: '♪',  bg: '#EAF5EE', color: '#1a7a4a', mins: 38  },
+  { name: 'Teams',   emoji: '📹', bg: '#F0EBFD', color: '#6230c9', mins: 30  },
+];
+/* const maxM = Math.max(...apps.map(a => a.mins));*/
+const barsEl = document.getElementById('app-bars');
+/*apps.forEach(a => {
+  const pct = Math.round(a.mins / maxM * 100);
+  const t = a.mins >= 60 ? Math.floor(a.mins/60)+'h '+(a.mins%60)+'m' : a.mins+'m';
+  barsEl.innerHTML += `<div class="app-bar-row">
+    <div class="app-icon-box" style="background:${a.bg};font-size:14px">${a.emoji}</div>
+    <div class="app-name">${a.name}</div>
+    <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${a.color}"></div></div>
+    <div class="app-time">${t}</div>
+  </div>`;
+});*/
+
+function updateUI(data) {
+  const barsEl = document.getElementById('app-bars');
+  barsEl.innerHTML = "";
+
+  const entries = Object.entries(data);
+  if (entries.length === 0) return;
+
+  // sort (best UX)
+  entries.sort((a, b) => b[1] - a[1]);
+
+  const max = Math.max(...entries.map(e => e[1]));
+
+  entries.forEach(([app, seconds]) => {
+    let minutes = Math.floor(seconds / 60);
+    let remaining = Math.floor(seconds % 60);
+
+    let timeText = minutes > 0
+      ? `${minutes}m ${remaining}s`
+      : `${remaining}s`;
+
+    let percent = Math.round((seconds / max) * 100);
+
+    barsEl.innerHTML += `
+      <div class="app-bar-row">
+        <div class="app-name">${app}</div>
+        <div class="bar-track">
+          <div class="bar-fill" style="width:${percent}%"></div>
+        </div>
+        <div class="app-time">${timeText}</div>
+      </div>
+    `;
+  });
+}
+
+// Donut
+const cats = [
+  { name: 'Work',          pct: 38, color: '#1a56db' },
+  { name: 'Entertainment', pct: 27, color: '#c0392b' },
+  { name: 'Social',        pct: 18, color: '#a35c00' },
+  { name: 'Browsing',      pct: 12, color: '#1a7a4a' },
+  { name: 'Other',         pct:  5, color: '#888780' },
+];
+const donutCtx = document.getElementById('donut').getContext('2d');
+const donutChart = new Chart(donutCtx, {
+  type: 'doughnut',
+  data: { labels: cats.map(c=>c.name), datasets: [{ data: cats.map(c=>c.pct), backgroundColor: cats.map(c=>c.color), borderWidth: 0, hoverOffset: 4 }] },
+  options: { responsive: false, cutout: '70%', plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => ' '+c.label+': '+c.parsed+'%' } } } }
+});
+const lgEl = document.getElementById('donut-legend');
+cats.forEach(c => {
+  lgEl.innerHTML += `<div class="legend-row"><div class="legend-dot" style="background:${c.color}"></div><span class="legend-name">${c.name}</span><span class="legend-pct">${c.pct}%</span></div>`;
+});
+
+// Hourly chart
+const hourlyData = [4, 8, 28, 48, 52, 46, 38, 60, 72, 58, 44, 32, 18, 10, 8];
+const hourlyLabels = ['7a','8a','9a','10a','11a','12p','1p','2p','3p','4p','5p','6p','7p','8p','9p'];
+const hourlyCtx = document.getElementById('hourly-chart').getContext('2d');
+const hourlyChart = new Chart(hourlyCtx, {
+  type: 'bar',
+  data: {
+    labels: hourlyLabels,
+    datasets: [{
+      data: hourlyData,
+      backgroundColor: hourlyData.map(v => v === 72 ? '#1a56db' : 'rgba(26,86,219,0.18)'),
+      borderRadius: 4, borderSkipped: false
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => ' '+c.parsed.y+'min' } } },
+    scales: {
+      x: { grid: { display: false }, ticks: { font: { size: 10 }, color: '#a8a49e' } },
+      y: { display: false }
+    }
+  }
+});
+
+function updateCharts() {
+  const tc = dark ? '#8c8880' : '#a8a49e';
+  hourlyChart.options.scales.x.ticks.color = tc;
+  hourlyChart.update();
+}
+
+// Streak
+const streakEl = document.getElementById('streak-grid');
+const pattern = [1,1,0,1,1,1,1, 1,1,1,0,1,1,1, 1,1,1,1,0,1,0];
+for (let w = 0; w < 3; w++) {
+  const row = document.createElement('div');
+  row.className = 'streak-row';
+  for (let d = 0; d < 7; d++) {
+    const idx = w * 7 + d;
+    const isToday = idx === 20;
+    const v = pattern[idx];
+    row.innerHTML += `<div class="streak-cell" style="background:${v ? '#1a56db' : 'var(--surface2)'};opacity:${v ? 1 : 0.4};border:${isToday ? '2px solid #1a56db' : '1px solid var(--border)'}"></div>`;
+  }
+  streakEl.appendChild(row);
+}
+
+// App limits
+const limitsData = [
+  { name: 'YouTube', emoji: '▶', bg: '#FDECEA', color: '#c0392b', used: 60, limit: 60 },
+  { name: 'Slack',   emoji: '💬', bg: '#FDF3E3', color: '#a35c00', used: 74, limit: 120 },
+  { name: 'Chrome',  emoji: '🌐', bg: '#EBF0FD', color: '#1a56db', used: 148, limit: 180 },
+];
+const limEl = document.getElementById('app-limits');
+limitsData.forEach(a => {
+  const pct = Math.min(100, Math.round(a.used/a.limit*100));
+  const warn = pct >= 100 ? '#c0392b' : pct >= 80 ? '#a35c00' : a.color;
+  const label = pct >= 100 ? '<span class="card-badge badge-red" style="font-size:9px">Limit reached</span>' : pct+'%';
+  limEl.innerHTML += `<div class="limit-row">
+    <div class="limit-left">
+      <div class="app-icon-box" style="background:${a.bg};font-size:13px">${a.emoji}</div>
+      <div><div class="limit-app-name">${a.name}</div><div class="limit-used">${a.used}m / ${a.limit}m</div></div>
+    </div>
+    <div class="limit-bar-wrap">
+      <div style="text-align:right;font-size:10px;color:${warn};margin-bottom:3px">${label}</div>
+      <div class="limit-bar-track"><div class="limit-bar-fill" style="width:${pct}%;background:${warn}"></div></div>
+    </div>
+  </div>`;
+});
+
+// Notifications
+const notifs = [
+  { name: 'Slack',        emoji: '💬', bg: '#FDF3E3', count: 54 },
+  { name: 'Teams',        emoji: '📹', bg: '#F0EBFD', count: 31 },
+  { name: 'Outlook',      emoji: '✉',  bg: '#EBF0FD', count: 22 },
+  { name: 'Chrome',       emoji: '🌐', bg: '#EBF0FD', count: 17 },
+];
+const notifEl = document.getElementById('notif-list');
+notifs.forEach(n => {
+  notifEl.innerHTML += `<div class="notif-app-row">
+    <div class="notif-left">
+      <div class="app-icon-box" style="background:${n.bg};font-size:13px">${n.emoji}</div>
+      ${n.name}
+    </div>
+    <span class="notif-count">${n.count}</span>
+  </div>`;
+});
+
+// Schedule
+const schedules = [
+  { name: 'Bedtime mode',  time: '10:00 PM – 7:00 AM', on: true  },
+  { name: 'Focus hours',   time: '9:00 AM – 12:00 PM', on: true  },
+  { name: 'Lunch break',   time: '1:00 PM – 2:00 PM',  on: false },
+  { name: 'Evening wind-down', time: '9:00 PM – 10:00 PM', on: true },
+];
+const schEl = document.getElementById('schedule-list');
+schedules.forEach((s, i) => {
+  schEl.innerHTML += `<div class="schedule-row">
+    <div><div class="sch-name">${s.name}</div><div class="sch-time">${s.time}</div></div>
+    <label class="sw"><input type="checkbox" ${s.on ? 'checked' : ''} onchange="toggleSch(this,${i})"><span class="sw-slider"></span></label>
+  </div>`;
+});
+function toggleSch(el, i) {}
+
+// Focus timer
+let running = false, secs = 25*60, interval = null, sessions = 0;
+function toggleTimer() {
+  const btn = document.getElementById('timerBtn');
+  if (!running) {
+    running = true;
+    btn.className = 'btn btn-red';
+    btn.textContent = 'Stop session';
+    interval = setInterval(() => {
+      secs--;
+      if (secs <= 0) {
+        clearInterval(interval); running = false; sessions++;
+        secs = 25*60;
+        btn.className = 'btn btn-blue'; btn.textContent = 'Start focus';
+        document.getElementById('timerSub').textContent = 'Pomodoro · '+sessions+' session'+(sessions>1?'s':'');
+      }
+      const m = String(Math.floor(secs/60)).padStart(2,'0');
+      const s2 = String(secs%60).padStart(2,'0');
+      document.getElementById('timerDisplay').textContent = m+':'+s2;
+      const offset = 289 * (secs / (25*60));
+      document.getElementById('timerRing').style.strokeDashoffset = Math.round(offset);
+    }, 1000);
+  } else {
+    clearInterval(interval); running = false; secs = 25*60;
+    document.getElementById('timerDisplay').textContent = '25:00';
+    document.getElementById('timerRing').style.strokeDashoffset = '72';
+    btn.className = 'btn btn-blue'; btn.textContent = 'Start focus';
+  }
+}
+
+</script>
+</body>
+</html>
