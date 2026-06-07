@@ -9,14 +9,16 @@ def track_usage():
 
     global app_usage
 
-    current_app = get_active_window()
+    current_window = get_active_window()
+    current_app = current_window["process"]
     start_time = time.time()
 
     while True:
 
         time.sleep(1)
 
-        new_app = get_active_window()
+        new_window = get_active_window()
+        new_app = new_window["process"]
 
         if new_app != current_app:
 

@@ -281,8 +281,16 @@ body {
 .limit-app-name { font-size: 13px; }
 .limit-used { font-size: 11px; color: var(--text3); font-family: var(--mono); }
 .limit-bar-wrap { width: 88px; }
-.limit-bar-track { height: 4px; background: var(--surface2); border-radius: 2px; overflow: hidden; margin-top: 4px; border: 1px solid var(--border); }
-.limit-bar-fill { height: 100%; border-radius: 2px; }
+.limit-bar-track { 
+  width: 90px;
+  height: 6px;
+  background: #222;
+  border-radius: 999px;
+       }
+.limit-bar-fill { 
+  height: 100%;
+   border-radius: 999px;
+  transition: width 0.4s ease; }
 
 /* Toggle switch */
 .sw { position: relative; width: 34px; height: 19px; flex-shrink: 0; }
@@ -351,5 +359,132 @@ canvas { display: block; }
   .metrics { grid-template-columns: 1fr 1fr; }
   .content { padding: 16px; }
   .topbar { padding: 14px 16px; }
+}
+
+.calendar-header{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:12px;
+  margin-bottom:16px;
+}
+
+.calendar-header button{
+  background:none;
+  border:none;
+  color:var(--text);
+  cursor:pointer;
+  font-size:16px;
+}
+
+.calendar-header span{
+  background: var(--surface2);
+  padding: 8px 24px;
+  border-radius: 12px;
+  font-weight: 600;
+}
+
+.weekdays{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  margin-bottom:10px;
+  text-align:center;
+  color:var(--text2);
+  font-size:11px;
+}
+
+.calendar-grid{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  gap:8px;
+}
+
+.calendar-day{
+  text-align:center;
+}
+
+.streak-icon{
+  font-size:20px;
+  margin-bottom:4px;
+}
+
+.streak-badge{
+  background: var(--green-light);
+  color: var(--green);
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+}
+
+.day-number{
+  font-size:12px;
+}
+
+.streak-footer{
+  margin-top:18px;
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.streak-stat{
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:8px 14px;
+  font-size:12px;
+  background: var(--surface2);
+}
+
+.timer-ring {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  margin: 0 auto 12px;
+}
+
+.timer-overlay {
+  position: absolute;
+  inset: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.timer-svg circle:last-child {
+  transition: stroke-dashoffset 1s linear;
+}
+
+.fuse-wrapper {
+  position: relative;
+  width: 300px;
+  height: 300px;
+  margin: 0 auto;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.fuse-wrapper canvas {
+  position: absolute;
+  inset: 0;
+}
+
+.fuse-time {
+  position: absolute;
+  inset: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 56px;
+  font-weight: 700;
+  color: white;
+
+  pointer-events: none;
+
+  transform:translateY(8px);
 }
 </style>

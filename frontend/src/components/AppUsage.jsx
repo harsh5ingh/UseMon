@@ -1,19 +1,26 @@
 import { useEffect, useState } from "react";
 import { getUsageData } from "../services/api";
+import {
+  appIcons,
+  DefaultIcon,
+} from "../utils/appIcons"
 
-const appNames = {
+ const appNames = {
   "msedge.exe":"Microsoft Edge",
     "Code.exe":"VS Code",
     "explorer.exe":"File Explorer",
     "chrome.exe":"Chrome",
     "brave.exe":"Brave",
+    "WhatsApp.exe":"Whatsapp",
+    "SearchHost.exe":"Windows Search",
 };
 
-const appIcons = {
-  "msedge.exe": "🌐",
-  "Code.exe": "💻",
-  "explorer.exe": "📁",
-};
+// const appIcons = {
+//   "msedge.exe": "🌐",
+//   "Code.exe": "💻",
+//   "explorer.exe": "📁",
+//   "WhatsApp"
+// };
 
 function AppUsage() {
 
@@ -47,6 +54,11 @@ function AppUsage() {
 
   }, []);
 
+  const maxSeconds =
+      apps.length > 0
+      ? apps[0][1]
+      : 1;
+
   return (
     <div className="card">
 
@@ -54,18 +66,35 @@ function AppUsage() {
         <span className="card-title">
           App Usage Today
         </span>
+
+        <span className="card-meta">
+          Total {apps.length} apps
+        </span>
       </div>
 
       {apps.map(([app, seconds]) => {
 
-        const minutes =
-          Math.floor(seconds / 60);
+        const hours =
+          Math.floor(seconds / 3600);
+
+        const minutes = 
+          Math.floor(
+            (seconds % 3600) / 60
+          );
+
+        const timeText =
+         hours > 0
+         ? `${hours}h ${minutes}m`
+         : minutes > 0
+         ? `${minutes}m`
+         : `${Math.floor(seconds)}s`;
 
         const displayName =
-          appNames[app] || app;
+          appNames[app] ||
+          app.replace(".exe", "");
 
-        const icon =
-          appIcons[app] || "🖥️";
+        const Icon =
+          appIcons[app] || DefaultIcon;
 
         return (
 
@@ -74,16 +103,26 @@ function AppUsage() {
             className="app-bar-row"
           >
 
-            <div>
-              {icon}
+            <div className="app-icon-box">
+              <Icon />
             </div>
 
             <div className="app-name">
               {displayName}
             </div>
 
+            <div className="bar-track">
+              <div
+              className="bar-fill"
+              style={{
+                width: `${(seconds / maxSeconds) * 100}%`,
+                background: "var(--blue)"
+              }}
+              />
+            </div>
+
             <div className="app-time">
-              {minutes}m
+              {timeText}
             </div>
 
           </div>
